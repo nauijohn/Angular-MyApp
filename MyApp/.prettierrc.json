@@ -1,5 +1,8 @@
 {
     "useTabs": true,
     "tabWidth": 4,
-    "singleAttributePerLine": false
+    "singleAttributePerLine": false,
+    "printWidth": 160,
+    "bracketSameLine": true,
+    "bracketSpacing": true
 }
