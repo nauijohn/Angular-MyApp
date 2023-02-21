@@ -1,6 +1,6 @@
 import { exhaustMap, map, take, tap } from 'rxjs/operators';
 
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { AuthService } from '../auth/auth.service';
@@ -28,24 +28,20 @@ export class DataStorageService {
   }
 
   fetchRecipes() {
-    return this.authService.user.pipe(
-      take(1),
-      exhaustMap((user) =>
-        this.http.get<Recipe[]>(
-          'https://ng-complete-guide-7f1c7-default-rtdb.asia-southeast1.firebasedatabase.app/recipes.json'
-        )
-      ),
-      map((recipes) =>
-        recipes.map((recipe) => {
-          return {
-            ...recipe,
-            ingredients: recipe.ingredients ? recipe.ingredients : [],
-          };
-        })
-      ),
-      tap((recipes) => {
-        this.recipeService.setRecipes(recipes);
-      })
-    );
+    return this.http
+      .get<Recipe[]>(
+        'https://ng-complete-guide-7f1c7-default-rtdb.asia-southeast1.firebasedatabase.app/recipes.json'
+      )
+      .pipe(
+        map((recipes) =>
+          recipes.map((recipe) => {
+            return {
+              ...recipe,
+              ingredients: recipe.ingredients ? recipe.ingredients : [],
+            };
+          })
+        ),
+        tap((recipes) => this.recipeService.setRecipes(recipes))
+      );
   }
 }
